@@ -1,0 +1,58 @@
+# --- Gateway Connection ---
+gateways:
+  local_gateway:
+    connection:
+      # For more information on configuring the connection to your execution engine, visit:
+      # https://sqlmesh.readthedocs.io/en/stable/reference/configuration/#connection
+      # https://sqlmesh.readthedocs.io/en/stable/integrations/engines/duckdb/#connection-options
+      # duckdb is the compute engine
+      type: duckdb
+      # concurrent_tasks: 1
+      # register_comments: True
+      # pre_ping: False
+      # pretty_sql: False
+      # schema_differ_overrides: 
+      # catalog_type_overrides: 
+      catalogs: 
+        # The name we will use to reference this database
+        catalog:
+          # Specify the table format
+          type: ducklake      
+          # Metadata Path (The Catalog Database): Where DuckLake stores table versions.
+          # In this local example, we use a DuckDB file for the catalog.
+          path: data/catalog.ducklake
+          # Data Path (The Object Storage): Where the actual Parquet files are stored.
+          data_path: data/storage/
+
+      extensions: 
+        - ducklake
+    state_connection:
+          # State connection for SQLMesh to track model states
+      type: duckdb
+      database: 'data/sqlmesh_state.db'
+
+      # connector_config: 
+      # secrets: 
+      # filesystems: 
+      # token: 
+
+default_gateway: local_gateway
+
+# --- Model Defaults ---
+# https://sqlmesh.readthedocs.io/en/stable/reference/model_configuration/#model-defaults
+
+model_defaults:
+  dialect: duckdb
+  start: 2024-01-01 # Start date for backfill history
+  cron: '@daily'    # Run models daily at 12am UTC (can override per model)
+
+# --- Linting Rules ---
+# Enforce standards for your team
+# https://sqlmesh.readthedocs.io/en/stable/guides/linter/
+
+linter:
+  enabled: true
+  rules:
+    - ambiguousorinvalidcolumn
+    - invalidselectstarexpansion
+    - noambiguousprojections

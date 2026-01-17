@@ -1,0 +1,12 @@
+[project]
+name = "ducklake-sqlmesh-tutorial"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "ibis-framework[duckdb]>=11.0.0",
+    "pins>=0.9.1",
+    "sqlalchemy>=2.0.45",
+    "sqlmesh[duckdb,lsp]>=0.228.2",
+]
