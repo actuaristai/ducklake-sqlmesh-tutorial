@@ -41,7 +41,7 @@ gateways:
       catalogs:
         my_lakehouse: "md:my_lakehouse"        
         # my_lakehouse: ":memory:"
-      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbC5sZWUuYW0rbW90aGVyZHVja0BnbWFpbC5jb20iLCJtZFJlZ2lvbiI6ImF3cy11cy1lYXN0LTEiLCJzZXNzaW9uIjoid2lsLmxlZS5hbSttb3RoZXJkdWNrLmdtYWlsLmNvbSIsInBhdCI6IkZVR3MwMUZWeFdENzljbDhYUTVYeTEteVB6Y3hWNk1MN0V2anA4ZXE1UmsiLCJ1c2VySWQiOiI1ZWU5MmY4Yy0xNmYwLTQ3ZDYtOTI3ZS04YjM4Nzg3YTE1NTciLCJpc3MiOiJtZF9wYXQiLCJyZWFkT25seSI6ZmFsc2UsInRva2VuVHlwZSI6InJlYWRfd3JpdGUiLCJpYXQiOjE3Njg2MzY2ODl9.wX72MIxy8Uztd1J1rPMiEPS_8MH65EqLABAVsKgifds
+      token: {{ env_var('MOTHERDUCK_TOKEN') }}
 
 default_gateway: motherduck
 
