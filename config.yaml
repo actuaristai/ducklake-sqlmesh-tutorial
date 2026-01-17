@@ -35,8 +35,15 @@ gateways:
       # secrets: 
       # filesystems: 
       # token: 
+  motherduck:
+    connection:
+      type: motherduck
+      catalogs:
+        # persistent: "md:"        
+        my_lakehouse: ":memory:"
+      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbC5sZWUuYW0rbW90aGVyZHVja0BnbWFpbC5jb20iLCJtZFJlZ2lvbiI6ImF3cy11cy1lYXN0LTEiLCJzZXNzaW9uIjoid2lsLmxlZS5hbSttb3RoZXJkdWNrLmdtYWlsLmNvbSIsInBhdCI6IkZVR3MwMUZWeFdENzljbDhYUTVYeTEteVB6Y3hWNk1MN0V2anA4ZXE1UmsiLCJ1c2VySWQiOiI1ZWU5MmY4Yy0xNmYwLTQ3ZDYtOTI3ZS04YjM4Nzg3YTE1NTciLCJpc3MiOiJtZF9wYXQiLCJyZWFkT25seSI6ZmFsc2UsInRva2VuVHlwZSI6InJlYWRfd3JpdGUiLCJpYXQiOjE3Njg2MzY2ODl9.wX72MIxy8Uztd1J1rPMiEPS_8MH65EqLABAVsKgifds
 
-default_gateway: local_gateway
+default_gateway: motherduck
 
 # --- Model Defaults ---
 # https://sqlmesh.readthedocs.io/en/stable/reference/model_configuration/#model-defaults
