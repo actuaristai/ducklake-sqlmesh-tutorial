@@ -5,4 +5,4 @@ Taken from https://www.tobikodata.com/blog/ducklake-sqlmesh-tutorial-a-hands-on
 - Install UV
 - run `uv sync`
 - install duckdb cli
-- in duckdbcli, run `ATTACH 'ducklake:data/catalog.ducklake'`
+- in duckdbcli, run `ATTACH 'ducklake:data/catalog.ducklake' AS my_lakehouse`
