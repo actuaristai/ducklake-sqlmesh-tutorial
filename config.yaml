@@ -15,7 +15,7 @@ gateways:
       # catalog_type_overrides: 
       catalogs: 
         # The name we will use to reference this database
-        catalog:
+        my_lakehouse:
           # Specify the table format
           type: ducklake      
           # Metadata Path (The Catalog Database): Where DuckLake stores table versions.
