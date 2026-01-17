@@ -3,8 +3,6 @@ MODEL (
     kind FULL,
     start '2024-01-01',
     cron '@daily',
-    allow_partials TRUE,
-    interval_unit 'day',
     grain event_date
 );
 

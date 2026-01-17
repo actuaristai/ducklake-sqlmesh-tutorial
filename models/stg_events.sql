@@ -1,6 +1,6 @@
 MODEL (
     name staging.stg_events,
-    kind VIEW
+    kind FULL
 );
 
 SELECT

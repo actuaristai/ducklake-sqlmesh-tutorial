@@ -4,7 +4,7 @@ import ibis
 
 ibis.options.interactive = True
 
-# use this code snippet to show the connection pane on the right. note need to diconnect to reduce conflicts.
+# use this code snippet to show the connection pane on the right. note need to close connection to reduce conflicts.
 connection_pane = duckdb.connect()
 connection_pane.install_extension("ducklake")
 connection_pane.sql("ATTACH 'ducklake:data/catalog.ducklake' AS my_lakehouse")
