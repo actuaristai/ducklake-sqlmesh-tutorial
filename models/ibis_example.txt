@@ -1,0 +1,30 @@
+import ibis  # type: ignore
+from ibis.expr.operations import Namespace, UnboundTable  # type: ignore
+
+from sqlmesh.core.macros import MacroEvaluator
+from sqlmesh.core.model import model
+
+
+@model(
+    "staging.ibis_full_model_sql",
+    is_sql=True,
+    kind="FULL",
+    # audits=["assert_positive_order_ids"],
+    description="This model uses ibis to generate and return a SQL string",
+)
+def entrypoint(evaluator: MacroEvaluator) -> str:
+    sql = """
+        SELECT
+        *
+        FROM (
+        SELECT
+            "t0"."event_type",
+            COUNT(DISTINCT "t0"."event_id") AS "num_events"
+        FROM "my_lakehouse"."raw"."events" AS "t0"
+        GROUP BY
+            1
+        ) AS "t1"
+        ORDER BY
+        "t1"."event_type" ASC
+        """
+    return sql
