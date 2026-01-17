@@ -6,4 +6,4 @@ main change to make it work is to set the catalogs to be called catalog in confi
 - Install UV
 - run `uv sync`
 - install duckdb cli
-- in duckdbcli, run 
+- in duckdbcli, run `ATTACH 'ducklake:data/catalog.ducklake'`

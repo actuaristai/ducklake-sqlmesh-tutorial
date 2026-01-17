@@ -22,7 +22,7 @@ gateways:
           # In this local example, we use a DuckDB file for the catalog.
           path: data/catalog.ducklake
           # Data Path (The Object Storage): Where the actual Parquet files are stored.
-          data_path: data/storage/
+          data_path: data/storage
 
       extensions: 
         - ducklake
