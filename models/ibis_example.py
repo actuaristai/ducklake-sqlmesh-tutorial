@@ -12,28 +12,11 @@ GATEWAY_CATALOG = {
 }
 
 
-def _build_events(catalog: str) -> ibis.Table:
-    """Return an ibis unbound table for raw.events under the given catalog.
-
-    To refresh the schema against a live connection run:
-        con = ibis.duckdb.connect(extensions="ducklake")
-        con.attach("ducklake:data/catalog.ducklake", name="my_lakehouse", read_only=True)
-        table = con.table("events", database="my_lakehouse.raw")
-        dict(table.schema())
-        con.disconnect()
-    """
-    return ibis.table(
-        schema={
-            "event_id": "int32",
-            "user_id": "int32",
-            "event_type": "string",
-            "event_timestamp": "timestamp(6)",
-            "revenue": "decimal(10, 2)",
-        },
-        name="events",
-        catalog=catalog,
-        database="raw",
-    )
+def _build_events(evaluator: MacroEvaluator, catalog: str) -> ibis.Table:
+    """Return an ibis unbound table for raw.events with schema auto-detected from the live connection."""
+    con = ibis.duckdb.from_connection(evaluator.engine_adapter.connection)
+    schema = con.table("events", database=f"{catalog}.raw").schema()
+    return ibis.table(schema=schema, name="events", catalog=catalog, database="raw")
 
 
 @model(
@@ -47,7 +30,7 @@ def entrypoint(evaluator: MacroEvaluator) -> str:
     gateway = evaluator.gateway or "local_gateway"
     catalog = GATEWAY_CATALOG.get(gateway, "my_lakehouse")
 
-    events = _build_events(catalog)
+    events = _build_events(evaluator, catalog)
 
     # Build the query with ibis — .to_sql() keeps column-level lineage intact.
     query = events \
