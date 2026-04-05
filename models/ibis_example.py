@@ -18,7 +18,8 @@ def _build_events(catalog: str) -> ibis.Table:
     To refresh the schema against a live connection run:
         con = ibis.duckdb.connect(extensions="ducklake")
         con.attach("ducklake:data/catalog.ducklake", name="my_lakehouse", read_only=True)
-        dict(con.table("events", database="my_lakehouse.raw").schema())
+        table = con.table("events", database="my_lakehouse.raw")
+        dict(table.schema())
         con.disconnect()
     """
     return ibis.table(
