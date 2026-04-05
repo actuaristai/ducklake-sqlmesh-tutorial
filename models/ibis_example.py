@@ -1,6 +1,4 @@
 import ibis  # type: ignore
-from ibis.expr.operations import Namespace, UnboundTable  # type: ignore
-import ibis.expr.datatypes as dt
 
 from sqlmesh.core.macros import MacroEvaluator
 from sqlmesh.core.model import model
@@ -15,7 +13,7 @@ GATEWAY_CATALOG = {
 
 
 def _build_events(catalog: str) -> ibis.Table:
-    """Return an ibis UnboundTable for raw.events under the given catalog.
+    """Return an ibis unbound table for raw.events under the given catalog.
 
     To refresh the schema against a live connection run:
         con = ibis.duckdb.connect(extensions="ducklake")
@@ -23,17 +21,18 @@ def _build_events(catalog: str) -> ibis.Table:
         dict(con.table("events", database="my_lakehouse.raw").schema())
         con.disconnect()
     """
-    return UnboundTable(
-        name="events",
+    return ibis.table(
         schema={
-            "event_id": dt.Int32(nullable=True),
-            "user_id": dt.Int32(nullable=True),
-            "event_type": dt.String(length=None, nullable=True),
-            "event_timestamp": dt.Timestamp(timezone=None, scale=6, nullable=True),
-            "revenue": dt.Decimal(precision=10, scale=2, nullable=True),
+            "event_id": "int32",
+            "user_id": "int32",
+            "event_type": "string",
+            "event_timestamp": "timestamp(6)",
+            "revenue": "decimal(10, 2)",
         },
-        namespace=Namespace(catalog=catalog, database="raw"),
-    ).to_expr()
+        name="events",
+        catalog=catalog,
+        database="raw",
+    )
 
 
 @model(
