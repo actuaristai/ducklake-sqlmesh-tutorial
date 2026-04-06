@@ -13,12 +13,33 @@ GATEWAY_CATALOG = {
 }
 
 
-def _build_events(evaluator: MacroEvaluator, catalog: str) -> ibis.Table:
-    """Return an ibis unbound table for raw.events with schema auto-detected from the live connection."""
+def _build_table(
+    evaluator: MacroEvaluator,
+    catalog: str,
+    table: str,
+    database: str,
+) -> ibis.Table:
+    """Return an ibis unbound table with schema auto-detected from the live connection.
+
+    Args:
+        evaluator: The SQLMesh macro evaluator, used to access the runtime stage
+            and engine adapter connection.
+        catalog: The catalog name to use when resolving the table (e.g. ``"my_lakehouse"``).
+        table: The name of the source table to introspect.
+        database: The schema/database within the catalog that contains the table.
+
+    Returns:
+        An ibis unbound ``Table`` expression bound to the resolved catalog, database,
+        and table name, with schema inferred from the live DuckDB connection.
+
+    Raises:
+        FileNotFoundError: If the loading stage cannot locate ``data/catalog.ducklake``
+            by walking up the directory tree from this file.
+    """
     if evaluator.runtime_stage != "loading":
         # At runtime the engine_adapter is available and already has catalogs attached.
         con = ibis.duckdb.from_connection(evaluator.engine_adapter.connection)
-        schema = con.table("events", database=f"{catalog}.raw").schema()
+        schema = con.table(table, database=f"{catalog}.{database}").schema()
     else:
         # During loading the engine_adapter is not yet available — open a
         # read-only local connection just to detect the schema.
@@ -33,9 +54,9 @@ def _build_events(evaluator: MacroEvaluator, catalog: str) -> ibis.Table:
             raise FileNotFoundError("Could not locate data/catalog.ducklake")
         con = ibis.duckdb.connect(extensions=["ducklake"])
         con.attach(f"ducklake:{candidate}", name="my_lakehouse", read_only=True)
-        schema = con.table("events", database="my_lakehouse.raw").schema()
+        schema = con.table(table, database=f"my_lakehouse.{database}").schema()
         con.disconnect()
-    return ibis.table(schema=schema, name="events", catalog=catalog, database="raw")
+    return ibis.table(schema=schema, name=table, catalog=catalog, database=database)
 
 
 @model(
@@ -49,7 +70,7 @@ def entrypoint(evaluator: MacroEvaluator) -> str:
     gateway = evaluator.gateway or "local_gateway"
     catalog = GATEWAY_CATALOG.get(gateway, "my_lakehouse")
 
-    events = _build_events(evaluator, catalog)
+    events = _build_table(evaluator, catalog, table="events", database="raw")
 
     # Build the query with ibis — .to_sql() keeps column-level lineage intact.
     query = events \
