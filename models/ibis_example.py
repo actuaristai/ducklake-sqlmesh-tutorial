@@ -53,7 +53,8 @@ def _build_table(
         else:
             raise FileNotFoundError("Could not locate data/catalog.ducklake")
         con = ibis.duckdb.connect(extensions=["ducklake"])
-        con.attach(f"ducklake:{candidate}", name="my_lakehouse", read_only=True)
+        con.attach(f"ducklake:{candidate}",
+                   name="my_lakehouse", read_only=True)
         schema = con.table(table, database=f"my_lakehouse.{database}").schema()
         con.disconnect()
     return ibis.table(schema=schema, name=table, catalog=catalog, database=database)
@@ -66,6 +67,13 @@ def _build_table(
     description="This model uses ibis to generate and return a SQL string",
 )
 def entrypoint(evaluator: MacroEvaluator) -> str:
+    """To run this interactively to debug:
+    con = ibis.duckdb.connect(extensions=["ducklake"])
+    con.attach(path="ducklake:data/catalog.ducklake",
+               name='my_lakehouse', read_only=True)
+    events = con.table('events', database='my_lakehouse.raw')
+    con.disconnect()
+    """
     # Resolve catalog from the active gateway; fall back to local_gateway.
     gateway = evaluator.gateway or "local_gateway"
     catalog = GATEWAY_CATALOG.get(gateway, "my_lakehouse")
