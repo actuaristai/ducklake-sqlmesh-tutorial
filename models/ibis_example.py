@@ -1,4 +1,5 @@
 import ibis  # type: ignore
+from pathlib import Path
 
 from sqlmesh.core.macros import MacroEvaluator
 from sqlmesh.core.model import model
@@ -14,8 +15,26 @@ GATEWAY_CATALOG = {
 
 def _build_events(evaluator: MacroEvaluator, catalog: str) -> ibis.Table:
     """Return an ibis unbound table for raw.events with schema auto-detected from the live connection."""
-    con = ibis.duckdb.from_connection(evaluator.engine_adapter.connection)
-    schema = con.table("events", database=f"{catalog}.raw").schema()
+    if evaluator.runtime_stage != "loading":
+        # At runtime the engine_adapter is available and already has catalogs attached.
+        con = ibis.duckdb.from_connection(evaluator.engine_adapter.connection)
+        schema = con.table("events", database=f"{catalog}.raw").schema()
+    else:
+        # During loading the engine_adapter is not yet available — open a
+        # read-only local connection just to detect the schema.
+        # Walk up from this file to find data/catalog.ducklake (handles worktrees).
+        current = Path(__file__).resolve().parent
+        while current != current.parent:
+            candidate = current / "data" / "catalog.ducklake"
+            if candidate.exists():
+                break
+            current = current.parent
+        else:
+            raise FileNotFoundError("Could not locate data/catalog.ducklake")
+        con = ibis.duckdb.connect(extensions=["ducklake"])
+        con.attach(f"ducklake:{candidate}", name="my_lakehouse", read_only=True)
+        schema = con.table("events", database="my_lakehouse.raw").schema()
+        con.disconnect()
     return ibis.table(schema=schema, name="events", catalog=catalog, database="raw")
 
 
