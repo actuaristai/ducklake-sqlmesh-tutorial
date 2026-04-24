@@ -1,0 +1,57 @@
+---
+title: "Data Quality Report"
+date: today
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 2
+execute:
+  echo: false
+jupyter: python3
+---
+
+This report validates each layer of the DuckLake pipeline using
+[pointblank](https://posit-dev.github.io/pointblank/).
+
+```{python}
+from validations.connection import get_connection
+from validations.checks import (
+    validate_daily_revenue,
+    validate_raw_events,
+    validate_stg_events,
+)
+
+con = get_connection()
+```
+
+## Raw Events
+
+Checks the seed data in `raw.events`: non-null keys, known event types,
+non-negative revenue, and a unique `event_id`.
+
+```{python}
+validate_raw_events(con)
+```
+
+## Staging Events
+
+Checks `staging.stg_events`: null `event_id` rows were filtered upstream,
+dates are populated, and revenue is non-negative.
+
+```{python}
+validate_stg_events(con)
+```
+
+## Daily Revenue
+
+Checks `analytics.daily_revenue`: `event_date` is the unique grain, every
+day has at least one user, and revenue is non-negative.
+
+```{python}
+validate_daily_revenue(con)
+```
+
+```{python}
+con.disconnect()
+```
