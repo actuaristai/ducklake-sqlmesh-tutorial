@@ -8,7 +8,8 @@ format:
     toc-depth: 2
 execute:
   echo: false
-jupyter: python3
+jupyter: ducklake-sqlmesh-tutorial # uv run python -m ipykernel install --user --name ducklake-sqlmesh-tutorial
+
 ---
 
 This report validates each layer of the DuckLake pipeline using

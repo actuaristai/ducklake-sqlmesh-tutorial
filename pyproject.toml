@@ -6,8 +6,12 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "ibis-framework[duckdb]>=11.0.0",
+    "ipykernel>=7.2.0",
+    "nbclient>=0.10.4",
+    "nbformat>=5.10.4",
     "pins>=0.9.1",
     "pointblank>=0.17.0",
+    "polars>=1.40.1",
     "sqlalchemy>=2.0.45",
     "sqlmesh[duckdb,lsp]>=0.228.2",
 ]
