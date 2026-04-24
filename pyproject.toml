@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "ibis-framework[duckdb]>=11.0.0",
     "pins>=0.9.1",
+    "pointblank>=0.17.0",
     "sqlalchemy>=2.0.45",
     "sqlmesh[duckdb,lsp]>=0.228.2",
 ]
