@@ -10,3 +10,7 @@ wheels/
 .venv
 data
 my_ducklake.ducklake
+
+# SQLMesh generated
+.cache/
+logs/
