@@ -332,28 +332,11 @@ wheels = [
 ]
 
 [[package]]
-name = "duckdb-extension-ducklake"
-version = "1.5.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "duckdb" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6a/ec/db0e8f0fdad4f031ffadd0e666a11485e790881b2f12781885b83801ad68/duckdb_extension_ducklake-1.5.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:21f191702fea15265140cdfd58351a5203d469da40ccf7028957867778903ee5", size = 8172183, upload-time = "2026-03-29T19:59:29.601Z" },
-    { url = "https://files.pythonhosted.org/packages/5a/14/b95855343c9bbefd0dad98b9ca98fc234c592627d76424460e6954a9c288/duckdb_extension_ducklake-1.5.1-py3-none-macosx_11_0_x86_64.whl", hash = "sha256:e597969bb2d3ab2be6bdc2f2fa89878d3349443a2d96bad2e3bc8e164e824446", size = 9277539, upload-time = "2026-03-29T19:59:32.304Z" },
-    { url = "https://files.pythonhosted.org/packages/7d/f7/8456d623aa94ac9eb632e7c028aa2397054ea7edf5ec8a40e59687b3601c/duckdb_extension_ducklake-1.5.1-py3-none-manylinux2014_aarch64.whl", hash = "sha256:3e838cd33caa055c884511de96f4814200f1f9b16edc8f307400adb6f9051023", size = 10501598, upload-time = "2026-03-29T19:59:34.786Z" },
-    { url = "https://files.pythonhosted.org/packages/44/00/ca8c638e5cde41300b8737c7910898c91c70c5d7189850a0573acaa85559/duckdb_extension_ducklake-1.5.1-py3-none-manylinux2014_x86_64.whl", hash = "sha256:3a52c5beee2000c2586d79050d90d58176d5f57c4a323c81dbaa041dc2107293", size = 11969805, upload-time = "2026-03-29T19:59:37.343Z" },
-    { url = "https://files.pythonhosted.org/packages/5b/87/e9e1a9cd70394fa8f8fb7899025a473cc0260dd5d1b54230d57e7f274dd7/duckdb_extension_ducklake-1.5.1-py3-none-win_amd64.whl", hash = "sha256:06b5d0c3a2ef842ff8e06c1c01e44725a1ec443a4297aa12950ed95e7aae07bb", size = 8457496, upload-time = "2026-03-29T19:59:39.867Z" },
-]
-
-[[package]]
 name = "ducklake-sqlmesh-tutorial"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "duckdb" },
     { name = "duckdb-cli" },
-    { name = "duckdb-extension-ducklake" },
     { name = "ibis-framework", extra = ["duckdb"] },
     { name = "ipykernel" },
     { name = "nbclient" },
@@ -367,9 +350,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "duckdb", specifier = "==1.5.1" },
     { name = "duckdb-cli", specifier = ">=1.5.2" },
-    { name = "duckdb-extension-ducklake", specifier = "==1.5.1" },
     { name = "ibis-framework", extras = ["duckdb"], specifier = ">=11.0.0" },
     { name = "ipykernel", specifier = ">=7.2.0" },
     { name = "nbclient", specifier = ">=0.10.4" },

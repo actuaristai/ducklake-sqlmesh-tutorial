@@ -4,12 +4,8 @@
 default:
     @just --list
 
-# Install the DuckLake extension from the bundled package into DuckDB's extension dir
-_install-ducklake:
-    uv run python scripts/install_ducklake.py
-
 # Run the full SQLMesh pipeline locally (DuckLake on disk)
-run: _install-ducklake
+run:
     mkdir -p data
     uv run sqlmesh --gateway local_gateway plan --auto-apply
 
