@@ -23,22 +23,28 @@ def _build_table(
     so a hardcoded schema is used. During execution the live schema is read from the
     already-attached catalog via SQLMesh's own connection, avoiding a second file lock.
     """
+    # Hardcoded schema kept in sync with raw_events.sql — used during loading
+    # and as a fallback during plan apply before logical views are promoted.
+    fallback_schema = ibis.Schema(
+        {
+            "event_id": "int32",
+            "user_id": "int32",
+            "event_type": "string",
+            "event_timestamp": "timestamp",
+            "revenue": "decimal(10,2)",
+        }
+    )
     if evaluator.runtime_stage == "loading":
-        # Schema must stay in sync with the columns defined in raw_events.sql.
-        schema = ibis.Schema(
-            {
-                "event_id": "int32",
-                "user_id": "int32",
-                "event_type": "string",
-                "event_timestamp": "timestamp",
-                "revenue": "decimal(10,2)",
-            }
-        )
+        schema = fallback_schema
     else:
         # Reuse SQLMesh's connection — my_lakehouse is already attached, so no
-        # second DuckLake file lock is created.
-        con = ibis.duckdb.from_connection(evaluator.engine_adapter.connection)
-        schema = con.table(table, database=f"{catalog}.{database}").schema()
+        # second DuckLake file lock is created. Falls back to hardcoded schema
+        # during plan apply before the logical view is promoted.
+        try:
+            con = ibis.duckdb.from_connection(evaluator.engine_adapter.connection)
+            schema = con.table(table, database=f"{catalog}.{database}").schema()
+        except Exception:
+            schema = fallback_schema
     return ibis.table(schema=schema, name=table, catalog=catalog, database=database)
 
 
